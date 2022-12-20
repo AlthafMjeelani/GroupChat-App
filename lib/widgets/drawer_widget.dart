@@ -70,7 +70,7 @@ class DrawerWidget extends StatelessWidget {
                 title: 'Logout',
                 textCancel: 'No',
                 textConfirm: "Yes",
-                middleText: 'Are you confirm to delete?',
+                middleText: 'Are you confirm to logout?',
                 onConfirm: () {
                   controller.logout();
                 },

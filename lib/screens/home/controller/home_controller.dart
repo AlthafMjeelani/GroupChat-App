@@ -1,18 +1,23 @@
 import 'dart:developer';
-
-import 'package:chatapp/utils/snackbar.dart';
 import 'package:chatapp/screens/home/service/home_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class HomeController extends GetxController {
+  HomeController() {
+    getUserData();
+  }
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final TextEditingController newGroupController = TextEditingController();
   Stream? groups;
   RxBool isLoading = false.obs;
-  String userName = "";
+
+    final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection("users");
+
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -33,35 +38,20 @@ class HomeController extends GetxController {
     });
   }
 
-  groupList() {
-    return StreamBuilder(
-      stream: groups,
-      builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data['groups'] != null) {
-            if ((snapshot.data['groups'] as List).isNotEmpty) {
-              return const Text('kjhfdkjhfjkdh');
-            } else {
-              return const Center(
-                child: Text('No Groups'),
-              );
-            }
-          } else {
-            return const Center(
-              child: Text('No Groups'),
-            );
-          }
-        } else {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ),
-          );
-        }
-      },
-    );
-  }
 
+// --------------------String manipulation------------//
+
+//get Id
+String getId(String res){
+  return res.substring(0,res.indexOf("_"));
+}
+
+ //get groupName
+
+ String getName(String res){
+  return res.substring(res.indexOf("_")+1);
+
+}
   //---------------Create groups---------------------//
 
   void createGroups(String userName, String id, String groupName) async {
